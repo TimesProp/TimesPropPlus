@@ -1,12 +1,12 @@
-# TimesProp: Coherent Hierarchical Forecasting of Building Energy Consumption Using End-to-End Deep Probabilistic Model
+# TimesPropPlus: Coherent Hierarchical Forecasting of Building Energy Consumption Using a Deep Probabilistic Model via Bayesian Learning
 
-This repository implements **TimesProp**, a hierarchical probabilistic forecasting framework.  
+This repository implements **TimesPropPlus**, a hierarchical probabilistic forecasting framework.  
 It supports coherent probabilistic forecasting for two-level tree-structured time series.
 
 ## Project Structure
 
 ```
-TimesProp/
+TimesPropPlus/
 │
 ├── train.py                # Main training script
 ├── timesprop.py            # Core model definition
@@ -25,8 +25,8 @@ TimesProp/
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/<your_username>/TimesProp.git
-   cd TimesProp
+   git clone https://github.com/<your_username>/TimesPropPlus.git
+   cd TimesPropPlus
    ```
 
 2. **Install dependencies:**
