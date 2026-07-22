@@ -1,99 +1,60 @@
-# TimesPropPlus: Coherent Hierarchical Forecasting of Building Energy Consumption Using a Deep Probabilistic Model via Bayesian Learning
+# TimesPropPlus: Hierarchical Forecasting of Building Energy Consumption Using a Two-Stage Deep Probabilistic Model via Bayesian Learning
 
-This repository implements **TimesPropPlus**, a hierarchical probabilistic forecasting framework.  
-It supports coherent probabilistic forecasting for two-level tree-structured time series.
+This repository contains the implementation of the proposed two-stage hierarchical probabilistic forecasting framework developed in this thesis.
 
 ## Project Structure
 
 ```
-TimesPropPlus/
-│
-├── train.py                # Main training script
-├── timesprop.py            # Core model definition
-├── metrics.py              # Evaluation metrics
-├── Losses.py               # Distribution-based loss functions
-├── kit.py                  # Hierarchical reconciliation methods
-├── nom_tool.py             # Data scaling tools
-├── timesprop_tool.py       # Period-aware feature blocks
-└── data/                   # Example data files (e.g., nz21.csv, nz23.csv)
+.
+├── go_phase1_3_b.py      # Stage 1: Bayesian probabilistic forecasting
+├── go_phase2_5_b4.py     # Stage 2: Hierarchical reconciliation
+├── sep_n10.py            # Main forecasting model
+├── B_model.py            # Bayesian neural network wrapper
+├── Losses.py             # Distribution loss functions
+├── metrics.py            # Evaluation metrics
+├── sampling_methods.py   # Distribution sampling methods
+├── data_tools.py         # Data preprocessing and dataloader
+├── attack.py             # Adversarial attack methods
+├── nom_tool.py           # Data normalization utilities
+└── README.md
 ```
 
----
+## Requirements
 
-## Installation
+- Python 3.10+
+- PyTorch
+- NumPy
+- Pandas
+- SciPy
+- matplotlib
+- properscoring
 
-1. **Clone the repository:**
+Install the required packages using
 
-   ```bash
-   git clone https://github.com/<your_username>/TimesPropPlus.git
-   cd TimesPropPlus
-   ```
-
-2. **Install dependencies:**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Prepare dataset:**
-   Place CSV files in:
-   ```
-   /workspace/data/
-   ```
-   Each CSV should include a time column followed by aggregate and child nodes:
-   ```
-   time, total, kitchen, laundry, lighting, oven, others
-   ```
-
----
+```bash
+pip install -r requirements.txt
+```
 
 ## Usage
 
-You can train the model using the command line:
+### Stage 1
+
+Train the Bayesian probabilistic forecasting model:
 
 ```bash
-python3 train.py \
-  --path nz23.csv \
-  --H 168 \
-  --batch_size 64 \
-  --repeat 3 \
-  --lr 5e-4 \
-  --p 3 \
-  --dist GD \
-  --period "[24, 12, 6]" \
-  --part "[[2, 3, 4], [1], [1]]" \
-  --MHA 1 \
-  --d_model 32
+python go_phase1_3_b.py
 ```
 
----
+### Stage 2
 
-## Argument Description
+Train the reconciliation layer using the outputs generated in Stage 1:
 
-| Argument       | Description                                                  | Default             |
-| -------------- | ------------------------------------------------------------ | ------------------- |
-| `--path`       | Dataset filename (inside `/workspace/data`)                  | **required**        |
-| `--H`          | Input history length (sequence length)                       | 168                 |
-| `--batch_size` | Batch size                                                   | 64                  |
-| `--repeat`     | Number of training runs                                      | 3                   |
-| `--lr`         | Learning rate                                                | 1e-4                |
-| `--p`          | Early stopping patience                                      | 3                   |
-| `--dist`       | Distribution type (`D`, `GD`, `BL`, `SD`, `SSD`)             | **required**        |
-| `--period`     | List of periods for multi-scale decomposition                | `[24, 12, 6]`       |
-| `--part`       | Number of partitions per period                              | `[[2,3,4],[1],[1]]` |
-| `--MHA`        | Multi-Head Attention module for feature interaction (0 or 1) | 1                   |
-| `--d_model`    | Embedding dimension                                          | 32                  |
+```bash
+python go_phase2_5_b4.py
+```
 
----
+## Notes
 
-## Evaluation Metrics
-
-| Metric      | Description                              |
-| ----------- | ---------------------------------------- |
-| **sMAPE**   | Symmetric Mean Absolute Percentage Error |
-| **R²**      | Coefficient of determination             |
-| **E_Acc≠0** | Non-Zero Disaggregation Accuracy         |
-| **CRPS**    | Continuous Ranked Probability Score      |
-| **MAE**     | Mean absolute error                      |
-
----
+- Stage 1 generates probabilistic forecasts using Bayesian learning.
+- Stage 2 learns a reconciliation layer to produce coherent hierarchical forecasts.
+- Dataset paths and training parameters can be modified through the command-line arguments in each training script.
